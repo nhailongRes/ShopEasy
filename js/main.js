@@ -14,6 +14,11 @@ const cartCloseBtn = document.getElementById('cart-close-btn')
 const addToCartBtns = document.querySelectorAll('.add-to-cart')
 const cartItems = document.getElementById('cart-items')
 const cartEmpty = document.getElementById('cart-empty')
+// modal elements
+const modalOverlay = document.getElementById('modal-overlay')
+const modalContainer = document.getElementById('modal-container')
+const modalCloseBtn = document.getElementById('modal-close-btn')
+const modalContent = document.getElementById('modal-content')
 
 // toast elements
 const toast = document.getElementById('toast')
@@ -44,6 +49,10 @@ const filterBtn = document.querySelectorAll('.filter-btn')
 const wishlistBtns = document.querySelectorAll('.wishlist-btn')
 
 // === HELPER FUNCTIONS ===
+function closeModal() {
+  modalOverlay.classList.remove('open')
+  modalContainer.classList.remove('open')
+}
 function updateTotal() {
   const items = document.querySelectorAll('.cart-item')
   let total = 0
@@ -361,7 +370,73 @@ cartItems.addEventListener('click', (event) => {
   // update total
   updateTotal()
 })
+//product card
+//click product card 
 
-// → remove item from cart
-// → update total price
-// → update cart count
+
+// STEP 1 — click product card → open modal
+// dùng event delegation trên productsGrid
+productsGrid.addEventListener('click', (event) => {
+
+  // tìm product-card-wrapper được click
+  const card = event.target.closest('.product-card-wrapper')
+  if (!card) return
+
+  // lấy data từ dataset
+  const name = card.dataset.name
+  const price = card.dataset.price
+  const originalPrice = card.dataset.originalPrice
+  const category = card.dataset.category
+  const emoji = card.dataset.emoji
+  const rating = card.dataset.rating
+  const reviews = card.dataset.reviews
+  const description = card.dataset.description
+  const instock = card.dataset.instock
+
+
+  // your code here...
+
+
+
+  // inject HTML vào modal
+  modalContent.innerHTML = `
+  <div class="modal-emoji">${emoji}</div>
+  <div class="modal-category">${category}</div>
+  <div class="modal-name">${name}</div>
+
+  <div class="modal-rating">
+    <span class="modal-stars">★★★★★</span>
+    <span class="modal-reviews">(${reviews} reviews)</span>
+  </div>
+
+  <p class="modal-description">${description}</p>
+
+  <div class="modal-price-row">
+    <span class="modal-price">$${price}</span>
+    ${originalPrice ? `<span class="modal-original-price">$${originalPrice}</span>` : ''}
+  </div>
+
+  <p class="modal-stock ${instock === 'true' ? 'in-stock' : 'out-of-stock'}">
+    ${instock === 'true' ? '✅ In Stock' : '❌ Out of Stock'}
+  </p>
+
+  <div class="modal-actions">
+    <button class="modal-add-btn"
+      data-name="${name}"
+      data-price="${price}"
+      data-emoji="${emoji}">
+      Add to Cart
+    </button>
+    <button class="modal-wishlist-btn">🤍</button>
+  </div>
+`
+  // open modal
+  // your code here...
+    modalOverlay.classList.add('open')
+    modalContainer.classList.add('open')
+})
+
+// STEP 2 — close modal
+// your code here...
+modalCloseBtn.addEventListener('click', closeModal)
+modalOverlay.addEventListener('click', closeModal)
