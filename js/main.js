@@ -2,23 +2,60 @@
 // YOUR JS PRACTICE STARTS HERE!
 // ================================
 
-//helper function 
+// === VARIABLES ===
+// cart elements
 let count = 0
 const cartCount = document.getElementById('cart-count')
 const cartTotal = document.getElementById('cart-total')
-// ...
+const cartToggleBtn = document.getElementById('cart-toggle-btn')
+const cartSidebar = document.getElementById('cart-sidebar')
+const cartOverlay = document.getElementById('cart-overlay')
+const cartCloseBtn = document.getElementById('cart-close-btn')
+const addToCartBtns = document.querySelectorAll('.add-to-cart')
+const cartItems = document.getElementById('cart-items')
+const cartEmpty = document.getElementById('cart-empty')
 
-// ================================
-// HELPER FUNCTIONS  ← đặt ở đây
-// ================================
+// toast elements
+const toast = document.getElementById('toast')
+const toastMsg = document.getElementById('toast-msg')
+
+// timer elements
+let hours = 8
+let mins = 45
+let secs = 0
+const timerHours = document.getElementById('timer-hours')
+const timerMins = document.getElementById('timer-mins')
+const timerSecs = document.getElementById('timer-secs')
+
+// newsletter elements
+const newsletterEmail = document.getElementById('newsletter-email')
+const newsletterBtn = document.getElementById('newsletter-btn')
+
+// sort elements
+const sortSelect = document.getElementById('sort-select')
+const productsGrid = document.getElementById('products-grid')
+
+// search elements
+const searchInput = document.getElementById('search-input')
+
+// category/filter/wishlist elements
+const catergoriesBtn = document.querySelectorAll('.category-card')
+const filterBtn = document.querySelectorAll('.filter-btn')
+const wishlistBtns = document.querySelectorAll('.wishlist-btn')
+
+// === HELPER FUNCTIONS ===
 function updateTotal() {
-  const prices = document.querySelectorAll('.cart-item-price')
+  const items = document.querySelectorAll('.cart-item')
   let total = 0
 
-  prices.forEach(price => {
-    total += parseInt(
-      price.textContent.replace('$', '').replace(',', '')
+  items.forEach(item => {
+    const basePrice = parseInt(
+      item.querySelector('.cart-item-price').dataset.price
     )
+    const qty = parseInt(
+      item.querySelector('.qty-value').textContent
+    )
+    total += basePrice * qty
   })
 
   cartTotal.textContent = '$' + total
@@ -26,38 +63,23 @@ function updateTotal() {
 
 // TODO 1 — Cart open/close
 // clicking cart button → open sidebar
-const cartToggleBtn = document.getElementById('cart-toggle-btn')
-const cartSidebar = document.getElementById('cart-sidebar')
-const cartOverlay = document.getElementById('cart-overlay')
-const cartCloseBtn = document.getElementById('cart-close-btn')
-
-cartToggleBtn.addEventListener('click', () =>{
-  cartSidebar.classList.toggle('open')
+cartToggleBtn.addEventListener('click', () => {
+  cartSidebar.classList.add('open')
+  cartOverlay.style.display = 'block'
 })
 
 cartOverlay.addEventListener('click', () =>{
   cartOverlay.style.display = 'none'
 })
-cartCloseBtn.addEventListener('click', ()=>{
-  cartSidebar.classList.toggle('open')
+cartCloseBtn.addEventListener('click', () => {
+  cartSidebar.classList.remove('open')  // ← đúng!
   cartOverlay.style.display = 'none'
 })
 
 // clicking overlay or close btn → close sidebar
 
 // TODO 2 — Add to cart
-let count = 0;
 // clicking "Add" button on product card
-const addToCartBtns = document.querySelectorAll('.add-to-cart')
-const cartCount = document.getElementById('cart-count')
-const cartItems = document.getElementById('cart-items')
-const cartEmpty = document.getElementById('cart-empty')
-const cartTotal = document.getElementById('cart-total')
-const toast = document.getElementById('toast')
-const toastMsg = document.getElementById('toast-msg')
-// → add item to cart sidebar
-
-
 addToCartBtns.forEach(btn => {
   btn.addEventListener('click', () => {
 
@@ -70,17 +92,18 @@ addToCartBtns.forEach(btn => {
     const item = document.createElement('div')
     item.className = 'cart-item'
     item.innerHTML = `
-      <div class="cart-item-img">${emoji}</div>
-      <div class="cart-item-info">
-        <div class="cart-item-name">${name}</div>
-        <div class="cart-item-price">$${price}</div>
-        <div class="cart-item-qty">
-            <button class="qty-btn minus-btn">-</button>
-            <span class="qty-value">1</span>
-            <button class="qty-btn plus-btn">+</button>
-        </div>
-      </div>
-    `
+  <div class="cart-item-img">${emoji}</div>
+  <div class="cart-item-info">
+    <div class="cart-item-name">${name}</div>
+    <div class="cart-item-price" data-price="${price}">$${price}</div>
+    <div class="cart-item-qty">
+      <button class="qty-btn minus-btn">-</button>
+      <span class="qty-value">1</span>
+      <button class="qty-btn plus-btn">+</button>
+    </div>
+  </div>
+  <button class="remove-btn">✕</button>
+`
     // STEP 3 — thêm vào cart
     cartItems.appendChild(item)
 
@@ -96,6 +119,7 @@ addToCartBtns.forEach(btn => {
 
     // STEP 6 — show toast
     // your code here
+    toastMsg.textContent = `${name} added to cart!`
     toast.classList.add('show')
     setTimeout(() => {
       toast.classList.remove('show')
@@ -110,7 +134,6 @@ addToCartBtns.forEach(btn => {
 // clicking a category card
 // → set it as active
 // → remove active from others
-const catergoriesBtn = document.querySelectorAll('.category-card');
 catergoriesBtn.forEach(btn=>{
   btn.addEventListener('click', () =>{
     catergoriesBtn.forEach(b =>{
@@ -126,8 +149,6 @@ catergoriesBtn.forEach(btn=>{
 // clicking filter buttons (All, New, Sale, Popular)
 // → set clicked as active
 // → remove active from others
-
-const filterBtn = document.querySelectorAll('.filter-btn')
 filterBtn.forEach(btn =>{
   btn.addEventListener('click', () =>{
     filterBtn.forEach(b =>{
@@ -141,8 +162,6 @@ filterBtn.forEach(btn =>{
 // TODO 5 — Wishlist toggle
 // clicking wishlist button (🤍)
 // → toggle between 🤍 and ❤️
-const wishlistBtns = document.querySelectorAll('.wishlist-btn')
-
 wishlistBtns.forEach(btn => {
   btn.addEventListener('click', () => {
 
@@ -158,8 +177,6 @@ wishlistBtns.forEach(btn => {
 // TODO 6 — Search
 // typing in search input
 // → filter products by name (hide/show product cards)
-const searchInput = document.getElementById('search-input')
-
 searchInput.addEventListener('keyup', () => {
   const searchValue = searchInput.value.toLowerCase()
   //                                    👆
@@ -180,14 +197,6 @@ searchInput.addEventListener('keyup', () => {
 
 // TODO 7 — Countdown timer
 // make the timer in the banner count down every second
-let hours = 8
-let mins = 45
-let secs = 0
-
-const timerHours = document.getElementById('timer-hours')
-const timerMins = document.getElementById('timer-mins')
-const timerSecs = document.getElementById('timer-secs')
-
 setInterval(() => {
   secs--
 
@@ -223,9 +232,6 @@ setInterval(() => {
 // → validate email input
 // → show success message if valid
 // → show error if empty or invalid
-const newsletterEmail = document.getElementById('newsletter-email')
-const newsletterBtn = document.getElementById('newsletter-btn')
-
 newsletterBtn.addEventListener('click', () => {
   const email = newsletterEmail.value.trim()
   //                                  👆
@@ -267,9 +273,6 @@ newsletterBtn.addEventListener('click', () => {
 // TODO 9 — Sort products
 // changing sort select
 // → reorder product cards by price or rating
-const sortSelect = document.getElementById('sort-select')
-const productsGrid = document.getElementById('products-grid')
-
 sortSelect.addEventListener('change', () => {
   const sortValue = sortSelect.value
 
@@ -311,8 +314,6 @@ sortSelect.addEventListener('change', () => {
 
 // TODO 10 — Remove from cart
 // clicking remove button in cart
-const cartItems = document.getElementById('cart-items')
-
 cartItems.addEventListener('click', (event) => {
 
   // guard clause
