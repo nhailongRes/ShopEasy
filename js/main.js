@@ -49,6 +49,69 @@ const filterBtn = document.querySelectorAll('.filter-btn')
 const wishlistBtns = document.querySelectorAll('.wishlist-btn')
 
 // === HELPER FUNCTIONS ===
+
+
+function addToCart(name, price, emoji) {
+
+  // CHECK — item đã có trong cart chưa?
+  const existingItems = document.querySelectorAll('.cart-item')
+  let existingItem = null
+
+  existingItems.forEach(item => {
+    if (item.querySelector('.cart-item-name').textContent === name) {
+      existingItem = item  // tìm thấy item cùng tên!
+    }
+  })
+
+  if (existingItem) {
+    // ✅ item đã có → tăng qty
+    const qtyDisplay = existingItem.querySelector('.qty-value')
+    const priceDisplay = existingItem.querySelector('.cart-item-price')
+    const basePrice = parseInt(priceDisplay.dataset.price)
+
+    let qty = parseInt(qtyDisplay.textContent)
+    qty++
+
+    qtyDisplay.textContent = qty
+    priceDisplay.textContent = '$' + (basePrice * qty)
+
+  } else {
+    // ✅ item chưa có → tạo mới
+    const item = document.createElement('div')
+    item.className = 'cart-item'
+    item.innerHTML = `
+      <div class="cart-item-img">${emoji}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${name}</div>
+        <div class="cart-item-price" data-price="${price}">$${price}</div>
+        <div class="cart-item-qty">
+          <button class="qty-btn minus-btn">-</button>
+          <span class="qty-value">1</span>
+          <button class="qty-btn plus-btn">+</button>
+        </div>
+      </div>
+      <button class="remove-btn">✕</button>
+    `
+    cartItems.appendChild(item)
+  }
+
+  // update count
+  count++
+  cartCount.textContent = count
+
+  // ẩn empty
+  cartEmpty.style.display = 'none'
+
+  // show toast
+  toastMsg.textContent = `${name} added to cart!`
+  toast.classList.add('show')
+  setTimeout(() => {
+    toast.classList.remove('show')
+  }, 2000)
+
+  // update total
+  updateTotal()
+}
 function closeModal() {
   modalOverlay.classList.remove('open')
   modalContainer.classList.remove('open')
@@ -98,43 +161,9 @@ addToCartBtns.forEach(btn => {
     const emoji = btn.dataset.emoji
 
     // STEP 2 — tạo cart item
-    const item = document.createElement('div')
-    item.className = 'cart-item'
-    item.innerHTML = `
-  <div class="cart-item-img">${emoji}</div>
-  <div class="cart-item-info">
-    <div class="cart-item-name">${name}</div>
-    <div class="cart-item-price" data-price="${price}">$${price}</div>
-    <div class="cart-item-qty">
-      <button class="qty-btn minus-btn">-</button>
-      <span class="qty-value">1</span>
-      <button class="qty-btn plus-btn">+</button>
-    </div>
-  </div>
-  <button class="remove-btn">✕</button>
-`
-    // STEP 3 — thêm vào cart
-    cartItems.appendChild(item)
-
-    // STEP 4 — update count
-    // your code here
+    addToCart(name,price,emoji)
     
-    count++;
-    cartCount.textContent = count
-    
-    // STEP 5 — ẩn empty message
-    // your code here
-    cartEmpty.style.display = 'none'
-
-    // STEP 6 — show toast
-    // your code here
-    toastMsg.textContent = `${name} added to cart!`
-    toast.classList.add('show')
-    setTimeout(() => {
-      toast.classList.remove('show')
-    }, 2000)
-    
-  })
+})
 })
 // → update cart count in navbar
 // → show toast notification
@@ -377,6 +406,18 @@ cartItems.addEventListener('click', (event) => {
 // STEP 1 — click product card → open modal
 // dùng event delegation trên productsGrid
 productsGrid.addEventListener('click', (event) => {
+  if (event.target.classList.contains('add-to-cart')) {
+    addToCart(
+      event.target.dataset.name,
+      event.target.dataset.price,
+      event.target.dataset.emoji
+    )
+    return  // ← dừng lại, không mở modal!
+  }
+  // nếu click vào wishlist button → toggle, không mở modal
+  if (event.target.classList.contains('wishlist-btn')) {
+    return  // ← dừng lại
+  }
 
   // tìm product-card-wrapper được click
   const card = event.target.closest('.product-card-wrapper')
@@ -440,3 +481,13 @@ productsGrid.addEventListener('click', (event) => {
 // your code here...
 modalCloseBtn.addEventListener('click', closeModal)
 modalOverlay.addEventListener('click', closeModal)
+
+
+modalContent.addEventListener('click', (event) => {
+  if (event.target.classList.contains('modal-add-btn')) {
+    const name = event.target.dataset.name
+    const price = event.target.dataset.price
+    const emoji = event.target.dataset.emoji
+    addToCart(name,price,emoji)
+  }
+})
