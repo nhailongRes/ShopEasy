@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Checkout</title>
+  <link rel="stylesheet" href="css/checkout.css" />  ← thêm
+</head>
+<body>
+
+  <header class="checkout-header">
+    <a href="index.html">← Back to Shop</a>
+    <h1>🔒 Secure Checkout</h1>
+  </header>
+
+  <main class="checkout-main">
+
+    <!-- LEFT — Form -->
+    <div class="checkout-form-section">
+      <form id="checkout-form">
+
+        <fieldset>
+          <legend>Shipping Address</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="shipping-name">Full Name</label>
+              <input type="text" id="shipping-name"
+                name="shipping_name"
+                autocomplete="name"
+                placeholder="John Doe"
+                required>
+              <span class="error-msg" id="name-error"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shipping-email">Email</label>
+            <input type="email" id="shipping-email"
+              name="shipping_email"
+              autocomplete="email"
+              placeholder="john@example.com"
+              required>
+            <span class="error-msg" id="email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="shipping-phone">Phone</label>
+            <input type="tel" id="shipping-phone"
+              name="shipping_phone"
+              autocomplete="tel"
+              placeholder="04XX XXX XXX"
+              required>
+            <span class="error-msg" id="phone-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="shipping-address">Street Address</label>
+            <input type="text" id="shipping-address"
+              name="shipping_address"
+              autocomplete="shipping street-address"
+              placeholder="123 Main Street"
+              required>
+            <span class="error-msg" id="address-error"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="shipping-city">City</label>
+              <input type="text" id="shipping-city"
+                name="shipping_city"
+                autocomplete="shipping address-level2"
+                placeholder="Sydney"
+                required>
+            </div>
+
+            <div class="form-group">
+              <label for="state">State</label>
+              <select name="state" id="state" required>
+                <option value="">Choose State</option>
+                <option value="nsw">NSW</option>
+                <option value="act">ACT</option>
+                <option value="vic">VIC</option>
+                <option value="qld">QLD</option>
+                <option value="sa">SA</option>
+                <option value="wa">WA</option>
+                <option value="nt">NT</option>
+                <option value="tas">TAS</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="shipping-zip">Postcode</label>
+              <input type="text" id="shipping-zip"
+                name="shipping_zip"
+                autocomplete="shipping postal-code"
+                placeholder="2000"
+                required>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Shipping Options -->
+        <fieldset>
+          <legend>Shipping Method</legend>
+          <div class="shipping-options">
+            <label class="shipping-option">
+              <input type="radio" name="shipping" value="0" checked>
+              <span>Standard Shipping</span>
+              <span class="shipping-price">FREE</span>
+            </label>
+            <label class="shipping-option">
+              <input type="radio" name="shipping" value="9.99">
+              <span>Express Shipping (2-3 days)</span>
+              <span class="shipping-price">$9.99</span>
+            </label>
+            <label class="shipping-option">
+              <input type="radio" name="shipping" value="19.99">
+              <span>Same Day Delivery</span>
+              <span class="shipping-price">$19.99</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Payment -->
+        <fieldset>
+          <legend>Payment Details</legend>
+
+          <div class="form-group">
+            <label for="card-name">Name on Card</label>
+            <input type="text" id="card-name"
+              name="card_name"
+              autocomplete="cc-name"
+              placeholder="John Doe"
+              required>
+            <span class="error-msg" id="card-name-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="card-number">Card Number</label>
+            <div class="card-input-wrapper">
+              <input type="text" id="card-number"
+                name="card_number"
+                autocomplete="cc-number"
+                inputmode="numeric"
+                placeholder="1234 5678 9012 3456"
+                maxlength="19"
+                required>
+              <span class="card-type" id="card-type"></span>
+            </div>
+            <span class="error-msg" id="card-number-error"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="card-expiry">Expiry Date</label>
+              <input type="text" id="card-expiry"
+                name="card_expiry"
+                autocomplete="cc-exp"
+                placeholder="MM/YY"
+                maxlength="5"
+                required>
+              <span class="error-msg" id="expiry-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="card-cvc">CVC</label>
+              <input type="text" id="card-cvc"
+                name="card_cvc"
+                autocomplete="cc-csc"
+                inputmode="numeric"
+                placeholder="123"
+                maxlength="3"
+                required>
+              <span class="error-msg" id="cvc-error"></span>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Promo Code -->
+        <fieldset>
+          <legend>Promo Code</legend>
+          <div class="promo-row">
+            <input type="text" id="promo-code"
+              placeholder="Enter promo code..."
+              style="text-transform: uppercase">
+            <button type="button" id="apply-promo-btn">Apply</button>
+          </div>
+          <span class="promo-msg" id="promo-msg"></span>
+        </fieldset>
+
+        <!-- Notes -->
+        <fieldset>
+          <legend>Order Notes</legend>
+          <textarea name="note"
+            rows="3"
+            placeholder="Special instructions..."></textarea>
+        </fieldset>
+
+        <!-- Agree -->
+        <div class="agree-row">
+          <input type="checkbox" id="agree" required>
+          <label for="agree">I agree with the
+            <a href="#">Terms and Conditions</a>
+          </label>
+        </div>
+
+        <button type="submit" class="place-order-btn" id="place-order-btn">
+          🔒 Place Order
+        </button>
+
+      </form>
+    </div>
+
+    <!-- RIGHT — Order Summary -->
+    <div class="order-summary">
+      <h2>Order Summary</h2>
+
+      <!-- cart items — JS fills this -->
+      <div id="summary-items"></div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row">
+        <span>Subtotal</span>
+        <span id="summary-subtotal">$0</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Shipping</span>
+        <span id="summary-shipping">FREE</span>
+      </div>
+
+      <div class="summary-row">
+        <span>Tax (10%)</span>
+        <span id="summary-tax">$0</span>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-row summary-total">
+        <span>Total</span>
+        <span id="summary-total">$0</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Order Success Modal -->
+  <div class="success-overlay" id="success-overlay"></div>
+  <div class="success-modal" id="success-modal">
+    <div class="success-icon">🎉</div>
+    <h2>Order Placed!</h2>
+    <p>Thank you for your order!</p>
+    <p>Order #<span id="order-number"></span></p>
+    <button id="continue-shopping-btn">Continue Shopping</button>
+  </div>
+
+  <script src="js/checkout.js"></script>
+</body>
+</html>
